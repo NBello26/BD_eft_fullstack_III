@@ -25,28 +25,24 @@ jobs:
 
       - name: Build imagen DB y push a ECR
         run: |
-          docker build -t tienda-db .
-          docker tag tienda-db:latest ${{ secrets.ECR_REPO_URL_DB }}:latest
+          docker build -t tienda_sanos-db .
+          docker tag tienda_sanos-db:latest ${{ secrets.ECR_REPO_URL_DB }}:latest
           docker push ${{ secrets.ECR_REPO_URL_DB }}:latest
 
       - name: Desplegar DB vía SSM
         run: |
-          aws ssm send-command \
-            --instance-ids ${{ secrets.EC2_DB_INSTANCE_ID }} \
-            --document-name "AWS-RunShellScript" \
-            --comment "Actualizar tienda-sanos-db desde ECR" \
-            --parameters '{"commands":[
-              "set -e",
-              "aws ecr get-login-password --region '${{ secrets.AWS_REGION }}' | docker login --username AWS --password-stdin ${{ secrets.ECR_REGISTRY }}",
-              "docker pull ${{ secrets.ECR_REPO_URL_DB }}:latest",
-              "docker stop tienda-sanos-db || true",
-              "docker rm tienda-sanos-db || true",
-              "docker run -d \
-              --name tienda-db \
-              -p 5432:5432 \
-              -e POSTGRES_PASSWORD='${{ secrets.DB_PASSWORD }}' \
-              -e POSTGRES_USER='${{ secrets.DB_USER }}' \
-              -e POSTGRES_DB='sanos_y_salvos_db' \
-              -v pgdata:/var/lib/postgresql/data \
-              ${{ secrets.ECR_REPO_URL_DB }}:latest"
-          ]}'
+            aws ssm send-command \
+              --instance-ids ${{ secrets.EC2_DB_INSTANCE_ID }} \
+              --document-name "AWS-RunShellScript" \
+              --comment "Actualizar tienda-db desde ECR" \
+              --parameters '{
+                "commands":[
+                  "set -e",
+                  "aws ecr get-login-password --region ${{ secrets.AWS_REGION }} | docker login --username AWS --password-stdin ${{ secrets.ECR_REGISTRY }}",
+                  "docker pull ${{ secrets.ECR_REPO_URL_DB }}:latest",
+                  "docker stop tienda_sanos-db || true",
+                  "docker rm tienda_sanos-db || true",
+                  "docker run -d --name tienda_sanos-db -p 5432:5432 -e POSTGRES_PASSWORD='${{ secrets.DB_PASSWORD }}' -e POSTGRES_USER='${{ secrets.DB_USER }}' -e POSTGRES_DB=sanos_y_salvos_db -v pgdata:/var/lib/postgresql/data ${{ secrets.ECR_REPO_URL_DB }}:latest"
+                ]
+              }' \
+              --output text
