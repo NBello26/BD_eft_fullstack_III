@@ -46,7 +46,7 @@ jobs:
               -p 5432:5432 \
               -e POSTGRES_PASSWORD='${{ secrets.DB_PASSWORD }}' \
               -e POSTGRES_USER='${{ secrets.DB_USER }}' \
-              -e POSTGRES_DB='{{ secrets.DB_NAME }}' \
+              -e POSTGRES_DB='sanos_y_salvos_db' \
               -v pgdata:/var/lib/postgresql/data \
               ${{ secrets.ECR_REPO_URL_DB }}:latest"
           ]}'
