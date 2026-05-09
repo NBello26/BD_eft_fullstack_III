@@ -8,4 +8,4 @@ ENV POSTGRES_USER=admin
 ENV POSTGRES_PASSWORD=admin
 
 # Copiamos el script a la carpeta especial de inicialización de Postgres
-COPY init-bd.sql /docker-entrypoint-initdb.d/
+COPY init-dbs.sql /docker-entrypoint-initdb.d/
