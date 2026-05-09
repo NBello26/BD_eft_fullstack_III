@@ -1,10 +1,11 @@
-# Usamos la imagen oficial de PostgreSQL
 FROM postgres:15-alpine
 
-# Definimos variables de entorno por defecto para la base de datos
-# Estos valores se pueden sobrescribir al ejecutar el contenedor
-ENV POSTGRES_DB=sanos_y_salvos_db
-ENV POSTGRES_USER=neondb_owner
-
-# Exponemos el puerto estándar de PostgreSQL
+# Exponemos el puerto por buena práctica/documentación
 EXPOSE 5432
+
+# Variables por defecto (las sobreescribes luego en el pipeline con -e)
+ENV POSTGRES_USER=admin
+ENV POSTGRES_PASSWORD=admin
+
+# Copiamos el script a la carpeta especial de inicialización de Postgres
+COPY init-bd.sql /docker-entrypoint-initdb.d/
