@@ -23,9 +23,15 @@ spec:
           name: postgres
         env:
         - name: POSTGRES_USER
-          value: "admin"
+          valueFrom:
+            secretKeyRef:
+              name: app-secrets
+              key: db-username
         - name: POSTGRES_PASSWORD
-          value: "admin"
+          valueFrom:
+            secretKeyRef:
+              name: app-secrets
+              key: db-password
         volumeMounts:
         - name: postgres-storage
           mountPath: /var/lib/postgresql/data
