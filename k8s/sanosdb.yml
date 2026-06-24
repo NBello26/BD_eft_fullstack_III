@@ -17,7 +17,7 @@ spec:
       containers:
       - name: postgres-db
         # La imagen se actualizará dinámicamente mediante el pipeline
-        image: 085985863834.dkr.ecr.us-east-1.amazonaws.com/sanosysalvosdb:${IMAGE_TAG}
+        image: 871767013014.dkr.ecr.us-east-1.amazonaws.com/sanosysalvosdb:${IMAGE_TAG}
         ports:
         - containerPort: 5432
           name: postgres
